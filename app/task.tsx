@@ -1,0 +1,16 @@
+export default class Task {
+  constructor(name, description) {
+    this.name = name;
+    this.description = description;
+    this.complete = false;
+  }
+
+  toggleComplete() {
+    this.complete = !this.complete;
+  }
+
+  get name() {
+    return this.name();
+  }
+
+}
