@@ -9,8 +9,4 @@ export default class Task {
     this.complete = !this.complete;
   }
 
-  get name() {
-    return this.name();
-  }
-
 }
