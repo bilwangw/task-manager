@@ -6,19 +6,16 @@ import {
   View,
   FlexAlignType,
   FlexStyle,
+  TextInput,
 } from 'react-native';
 import React from "react";
 import Task from './task.tsx';
+import {NavigationContainer, NavigationIndependentTree, useNavigation } from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-function MyButton() {
-  return (
-    <Button
-       title="manage-tasks"
-    >
-    Manage Tasks
-    </Button>
-  );
-}
+
+const Stack = createNativeStackNavigator();
+
 
 function DisplayTasks() {
   const rows = [];
@@ -42,19 +39,67 @@ function TaskRow(task) {
   )
 }
 
-export default function Index() {
+function HomeScreen() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={styles.fixToText}>
         <Text style={styles.header}>Simple Task Manager</Text>
       </View>
       <View>
-        <MyButton />
+        <Button
+          title="Add Task"
+          onPress={() =>
+            navigation.navigate('Tasks')
+          }
+        />
       </View>
-      <DisplayTasks />
+       <DisplayTasks />
     </View>
   );
 }
+
+function TaskScreen() {
+  const navigation = useNavigation();
+  const [text, onChangeText] = React.useState('Useless Text');
+  const [number, onChangeNumber] = React.useState('');
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.fixToText}>
+        <Text style={styles.header}>Add Task</Text>
+      </View>
+      <View>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeNumber}
+          value={number}
+          placeholder="Task Name"
+          keyboardType="numeric"
+        />
+      </View>
+      <View>
+        <Button
+          title="Go Home"
+          onPress={() =>
+            navigation.navigate('Home')
+          }
+        />
+      </View>
+    </View>
+  );
+}
+
+
+
+const tasks = [];
+
+const task1 = new Task("task1231", "this is a task")
+const task2 = new Task("task41242", "this is a task")
+const task3 = new Task("task2143", "this is a task")
+
+tasks.push(task1,task2,task3);
 
 
 const styles = StyleSheet.create({
@@ -81,14 +126,31 @@ const styles = StyleSheet.create({
     left: 15,
     right: 15,
   }
-
 });
 
+function RootStack() {
+  return (
+    <NavigationIndependentTree>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{title: 'Welcome'}}
+          />
+          <Stack.Screen
+            name="Tasks"
+            component={TaskScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </NavigationIndependentTree>
+  );
+};
 
-const tasks = [];
 
-const task1 = new Task("task1231", "this is a task")
-const task2 = new Task("task41242", "this is a task")
-const task3 = new Task("task2143", "this is a task")
-
-tasks.push(task1,task2,task3);
+export default function App() {
+  return (
+    <RootStack />
+  );
+}
