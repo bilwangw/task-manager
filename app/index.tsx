@@ -9,35 +9,12 @@ import {
   TextInput,
 } from 'react-native';
 import React from "react";
-import Task from './task.tsx';
+import {Task, DisplayToDo, ToDoRow, DisplayDoneTasks, DoneTaskRow} from './task.tsx';
 import {NavigationContainer, NavigationIndependentTree, useNavigation } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
+import styles from "./styles.tsx";
 
 const Stack = createNativeStackNavigator();
-
-
-function DisplayTasks() {
-  const rows = [];
-  for (var i = 0; i < tasks.length; i++) {
-    rows.push(TaskRow(tasks[i]));
-  }
-  return (
-    <View>
-      {rows}
-    </View>
-  )
-}
-
-function TaskRow(task) {
-  return (
-    <View style={styles.rows}>
-      <Text>{task.name}</Text>
-      <Text>{task.description}</Text>
-      <Text>{task.complete ? "Done!" : "Incomplete"}</Text>
-    </View>
-  )
-}
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -55,15 +32,18 @@ function HomeScreen() {
           }
         />
       </View>
-       <DisplayTasks />
+        <Text style={styles.subheader}>To-Do:</Text>
+        <DisplayToDo />
+        <Text style={styles.subheader}>Completed Tasks:</Text>
+        <DisplayDoneTasks />
     </View>
   );
 }
 
 function TaskScreen() {
   const navigation = useNavigation();
-  const [text, onChangeText] = React.useState('Useless Text');
-  const [number, onChangeNumber] = React.useState('');
+  const [nameText, nameOnChangeText] = React.useState('');
+  const [descText, descOnChangeText] = React.useState('');
 
   return (
     <View style={styles.container}>
@@ -71,12 +51,38 @@ function TaskScreen() {
         <Text style={styles.header}>Add Task</Text>
       </View>
       <View>
+        <Text>Task Name</Text>
         <TextInput
           style={styles.input}
-          onChangeText={onChangeNumber}
-          value={number}
+          onChangeText={nameOnChangeText}
+          value={nameText}
           placeholder="Task Name"
-          keyboardType="numeric"
+        />
+      </View>
+      <View>
+        <Text>Description</Text>
+        <TextInput
+          multiline
+          numberOfLines={4}
+          maxLength={40}
+          style={styles.input}
+          onChangeText={descOnChangeText}
+          value={descText}
+          placeholder="Description"
+        />
+      </View>
+      <View>
+        <Button
+          title="Submit"
+          onPress={() =>
+            {
+              if(nameText) {
+                tasks.push(new Task(nameText, descText));
+//                 nameText = "";
+//                 descText = "";
+              }
+            }
+          }
         />
       </View>
       <View>
@@ -95,38 +101,16 @@ function TaskScreen() {
 
 const tasks = [];
 
-const task1 = new Task("task1231", "this is a task")
-const task2 = new Task("task41242", "this is a task")
-const task3 = new Task("task2143", "this is a task")
+const task1 = new Task("task1", "this is a task");
+const task2 = new Task("task2", "this is a task");
+const task3 = new Task("task3", "this is a task");
+const task4 = new Task("task4", "this is a task");
+task4.complete = true;
 
-tasks.push(task1,task2,task3);
+tasks.push(task1,task2,task3, task4);
 
 
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 1,
-    justifyContent: 'center'
-  },
-  header: {
-    color: 'Black',
-    fontWeight: 'bold',
-    fontSize: 32,
-    textAlign: 'center',
-    margin: 25,
-  },
-  fixToText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 1,
-  },
-  rows: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    margin: 1,
-    left: 15,
-    right: 15,
-  }
-});
+
 
 function RootStack() {
   return (
@@ -136,7 +120,6 @@ function RootStack() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{title: 'Welcome'}}
           />
           <Stack.Screen
             name="Tasks"
