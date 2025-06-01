@@ -1,7 +1,9 @@
 // Task data structure
+var idCount = 0;
 
 export default class Task {
   constructor(name, description) {
+    this.id = idCount++;
     this.name = name;
     this.description = description;
     this.complete = false;
@@ -13,8 +15,10 @@ export default class Task {
 
 }
 
+export const tasks = [];
 
-export default function DisplayToDo() {
+
+export function DisplayToDo() {
   const rows = [];
   for (var i = 0; i < tasks.length; i++) {
     rows.push(ToDoRow(tasks[i]));
@@ -26,7 +30,7 @@ export default function DisplayToDo() {
   )
 }
 
-export default function ToDoRow(task) {
+function ToDoRow(task) {
   if(!task.complete) {
     return (
       <View style={styles.rows}>
@@ -37,7 +41,7 @@ export default function ToDoRow(task) {
   }
 }
 
-export default function DisplayDoneTasks() {
+export function DisplayDoneTasks() {
   const rows = [];
   for (var i = 0; i < tasks.length; i++) {
     rows.push(DoneTaskRow(tasks[i]));
@@ -49,7 +53,7 @@ export default function DisplayDoneTasks() {
   )
 }
 
-export default function DoneTaskRow(task) {
+function DoneTaskRow(task) {
   if(task.complete) {
     return (
       <View style={styles.rows}>
