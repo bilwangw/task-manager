@@ -23,6 +23,33 @@ const Stack = createNativeStackNavigator();
 const tasks = [];
 
 
+// Sample tasks for testing purposes
+const task1 = new Task("task1", "this is a task");
+const task2 = new Task("task2", "this is a task");
+const task3 = new Task("task3", "this is a task");
+const task4 = new Task("task4", "this is a task");
+// const task5 = new Task("task4", "this is a task");
+// const task6 = new Task("task4", "this is a task");
+// const task7 = new Task("task4", "this is a task");
+// const task8 = new Task("task4", "this is a task");
+// const task9 = new Task("task4", "this is a task");
+// const task10 = new Task("task4", "this is a task");
+// const task11 = new Task("task4", "this is a task");
+// const task12 = new Task("task4", "this is a task");
+// const task13 = new Task("task4", "this is a task");
+// const task14 = new Task("task4", "this is a task");
+// const task15 = new Task("task4", "this is a task");
+// const task16 = new Task("task4", "this is a task");
+// const task17 = new Task("task4", "this is a task");
+// const task18 = new Task("task4", "this is a task");
+task4.complete = true;
+
+tasks.push(task1,task2,task3, task4);
+// tasks.push(task1,task2,task3, task4, task5, task6, task7, task8, task9, task10, task11, task12, task13, task14, task15, task16, task17, task18);
+
+
+
+// Function for creating the list of tasks
 function DisplayTasks() {
   const rows = [];
   for (var i = 0; i < tasks.length; i++) {
@@ -41,6 +68,7 @@ function DisplayTasks() {
   )
 }
 
+// Function to display each individual task, handle deletion, and handle toggling completion
 function DisplayRow(task) {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -108,8 +136,7 @@ function DisplayRow(task) {
 }
 
 
-
-
+// Default page, displaying tasks with a button to add more
 function HomeScreen() {
   const navigation = useNavigation();
 
@@ -144,6 +171,7 @@ function HomeScreen() {
   );
 }
 
+// Form to add a new task with basic error handling
 function TaskScreen() {
   const navigation = useNavigation();
   const createAlert = () =>
@@ -215,29 +243,7 @@ function TaskScreen() {
 }
 
 
-const task1 = new Task("task1", "this is a task");
-const task2 = new Task("task2", "this is a task");
-const task3 = new Task("task3", "this is a task");
-const task4 = new Task("task4", "this is a task");
-// const task5 = new Task("task4", "this is a task");
-// const task6 = new Task("task4", "this is a task");
-// const task7 = new Task("task4", "this is a task");
-// const task8 = new Task("task4", "this is a task");
-// const task9 = new Task("task4", "this is a task");
-// const task10 = new Task("task4", "this is a task");
-// const task11 = new Task("task4", "this is a task");
-// const task12 = new Task("task4", "this is a task");
-// const task13 = new Task("task4", "this is a task");
-// const task14 = new Task("task4", "this is a task");
-// const task15 = new Task("task4", "this is a task");
-// const task16 = new Task("task4", "this is a task");
-// const task17 = new Task("task4", "this is a task");
-// const task18 = new Task("task4", "this is a task");
-task4.complete = true;
-
-tasks.push(task1,task2,task3, task4);
-// tasks.push(task1,task2,task3, task4, task5, task6, task7, task8, task9, task10, task11, task12, task13, task14, task15, task16, task17, task18);
-
+// Navigation function
 function RootStack() {
   return (
     <PaperProvider>
@@ -266,8 +272,6 @@ function RootStack() {
 
 export default function Main() {
   return (
-
     <RootStack />
-
   );
 }
