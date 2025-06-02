@@ -35,20 +35,14 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     margin: 1,
   },
+  tableHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
   rows: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    margin: 1,
-    left: 15,
-    right: 15,
-  },
-  rowsInactive: {
-    color: 'Gray',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    margin: 1,
-    left: 15,
-    right: 15,
+
   },
   modalView: {
     margin: 20,

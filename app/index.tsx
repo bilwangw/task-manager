@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   ScrollView,
   StyleSheet,
@@ -16,23 +17,9 @@ import {NavigationContainer, NavigationIndependentTree, useNavigation, CommonAct
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import styles from "./styles.tsx";
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { MD3DarkTheme, MD3LightTheme, PaperProvider, adaptNavigationTheme } from 'react-native-paper';
+import { PaperProvider, adaptNavigationTheme, DataTable } from 'react-native-paper';
 
 const Stack = createNativeStackNavigator();
-const { LightTheme } = adaptNavigationTheme({
-  reactNavigationLight: DefaultTheme,
-});
-
-
-const CombinedDefaultTheme = {
-  ...MD3LightTheme,
-  ...LightTheme,
-  colors: {
-    ...MD3LightTheme.colors,
-    ...LightTheme.colors,
-  },
-};
-
 const tasks = [];
 
 
@@ -42,80 +29,81 @@ function DisplayTasks() {
     rows.push(DisplayRow(tasks[i]));
   }
   return (
-    <View>
+    <DataTable>
+      <DataTable.Header style={styles.tableHeader}>
+        <DataTable.Title style={{flex: 1}}></DataTable.Title>
+        <DataTable.Title style={{flex: 3}}>Name</DataTable.Title>
+        <DataTable.Title style={{flex: 6}}>Description</DataTable.Title>
+        <DataTable.Title style={{flex: 1}}></DataTable.Title>
+      </DataTable.Header>
       {rows}
-    </View>
+    </DataTable>
   )
 }
 
 function DisplayRow(task) {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [taskState, setTaskState] = useState(task.complete ? " \u2713":" ---")
   return (
-    <View style={styles.rowsInactive} key={task.id}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible)
-        }}
-      >
-        <View style={styles.modalView}>
-          <Text style={styles.modalHeader}>Delete {task.name}?</Text>
-          <Text>Are you sure you want to delete this task? This action cannot be undone</Text>
-          <View style={styles.modalButtons}>
-            <Button
-              title = "Delete"
-              onPress={() => {
-  //                   setModalVisible(!modalVisible);
-                  tasks.splice(tasks.indexOf(task), 1);
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [
-                        { name: 'Home' },
-                      ],
-                    })
-                  );
-                }
-              }
-            />
-            <Button
-              title = "Cancel"
-              onPress={() => {
-                  setModalVisible(!modalVisible);
-                }
-              }
-            />
-          </View>
-        </View>
-      </Modal>
-      <Text>{task.complete ? "\u2713":"\u274C"}</Text>
-      <Text>{task.name}</Text>
-      <Text>{task.description}</Text>
-      <Button
-        title = {task.complete ? "Mark as to-do":"Mark as complete"}
-        onPress={() => {
-          task.complete=!task.complete
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [
-                { name: 'Home' },
-              ],
-            })
-          );
-        }}
-      />
-      <Button
-        title = "X"
-        onPress={() => {
+      <DataTable.Row key={task.id}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible)
+          }}
+          >
+            <View style={styles.modalView}>
+              <Text style={styles.modalHeader}>Delete {task.name}?</Text>
+              <Text>Are you sure you want to delete this task? This action cannot be undone</Text>
+              <View style={styles.modalButtons}>
+                <Button
+                  title = "Delete"
+                  onPress={() => {
+                      tasks.splice(tasks.indexOf(task), 1);
+                      navigation.dispatch(
+                        CommonActions.reset({
+                          index: 1,
+                          routes: [
+                            { name: 'Home' },
+                          ],
+                        })
+                      );
+                    }
+                  }
+                />
+                <Button
+                  title = "Cancel"
+                  onPress={() => {
+                      setModalVisible(!modalVisible);
+                    }
+                  }
+                />
+              </View>
+            </View>
+          </Modal>
+        <DataTable.Cell
+          style={{flex: 1, textAlign: 'right',}}
+          onPress={() => {
+            task.complete=!task.complete;
+            setTaskState(task.complete ? " \u2713":" ---");
+          }}
+        >
+        {taskState}
+        </DataTable.Cell>
+        <DataTable.Cell style={{flex: 3}}>{task.name}</DataTable.Cell>
+        <DataTable.Cell style={{flex: 6}}>{task.description}</DataTable.Cell>
+        <DataTable.Cell
+          style={{flex: 1}}
+          onPress={() => {
             setModalVisible(true)
           }
         }
-      />
-    </View>
+        >{"\u274C"}
+        </DataTable.Cell>
+      </DataTable.Row>
   )
 }
 
@@ -157,6 +145,11 @@ function HomeScreen() {
 
 function TaskScreen() {
   const navigation = useNavigation();
+  const createAlert = () =>
+      Alert.alert('Could Not Create Task', 'Please enter a task name', [
+        {text: 'OK', onPress: () => console.log('ok')},
+      ]);
+
   const [nameText, nameOnChangeText] = React.useState('');
   const [descText, descOnChangeText] = React.useState('');
 
@@ -192,14 +185,10 @@ function TaskScreen() {
           onPress={() => {
               if(nameText) {
                 tasks.push(new Task(nameText, descText));
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 1,
-                    routes: [
-                      { name: 'Tasks' },
-                    ],
-                  })
-                );
+                nameOnChangeText('');
+                descOnChangeText('');
+              } else {
+                createAlert();
               }
             }
           }
@@ -250,9 +239,9 @@ tasks.push(task1,task2,task3, task4);
 
 function RootStack() {
   return (
-    <PaperProvider theme={CombinedDefaultTheme}>
+    <PaperProvider>
       <NavigationIndependentTree>
-        <NavigationContainer theme={CombinedDefaultTheme}>
+        <NavigationContainer>
           <Stack.Navigator initialRouteName="Home"
             screenOptions={{
               headerShown: false
