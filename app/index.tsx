@@ -12,7 +12,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import React, {useState} from "react";
-import Task from './task.tsx'
+import Task from './task.tsx';
 import {NavigationContainer, NavigationIndependentTree, useNavigation, CommonActions, DefaultTheme, } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import styles from "./styles.tsx";
@@ -118,6 +118,7 @@ function HomeScreen() {
       <SafeAreaView style={styles.container}>
         <View style={styles.fixToText}>
           <Text style={styles.header}>Simple Task Manager</Text>
+          <Text style={styles.description}>To mark a task as complete, click on the "---". To Un-mark a task as complete, click it again!</Text>
         </View>
         <View style={styles.buttonStyle}>
           <Button

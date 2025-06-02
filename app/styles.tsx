@@ -31,7 +31,6 @@ export default StyleSheet.create({
     bottom: 20,
    },
   fixToText: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
     margin: 1,
   },
@@ -43,6 +42,9 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
 
+  },
+  description: {
+    margin: 15,
   },
   modalView: {
     margin: 20,
