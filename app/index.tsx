@@ -8,21 +8,35 @@ import {
   FlexStyle,
   TextInput,
   Modal,
+  useColorScheme,
 } from 'react-native';
 import React, {useState} from "react";
 import Task from './task.tsx'
-import {NavigationContainer, NavigationIndependentTree, useNavigation, CommonActions } from '@react-navigation/native';
+import {NavigationContainer, NavigationIndependentTree, useNavigation, CommonActions, DefaultTheme, } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import styles from "./styles.tsx";
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import { MD3DarkTheme, MD3LightTheme, PaperProvider, adaptNavigationTheme } from 'react-native-paper';
 
 const Stack = createNativeStackNavigator();
+const { LightTheme } = adaptNavigationTheme({
+  reactNavigationLight: DefaultTheme,
+});
 
+
+const CombinedDefaultTheme = {
+  ...MD3LightTheme,
+  ...LightTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    ...LightTheme.colors,
+  },
+};
 
 const tasks = [];
 
 
-function DisplayToDo() {
+function DisplayTasks() {
   const rows = [];
   for (var i = 0; i < tasks.length; i++) {
     rows.push(DisplayRow(tasks[i]));
@@ -117,7 +131,7 @@ function HomeScreen() {
         <View style={styles.fixToText}>
           <Text style={styles.header}>Simple Task Manager</Text>
         </View>
-        <View>
+        <View style={styles.buttonStyle}>
           <Button
             title="Add Task"
             onPress={() => {
@@ -132,10 +146,10 @@ function HomeScreen() {
             }
           />
         </View>
-          <ScrollView style={styles.scrollView}>
-            <Text style={styles.subheader}>Tasks:</Text>
-            <DisplayToDo />
-          </ScrollView>
+        <ScrollView style={styles.scrollView}>
+          <Text style={styles.subheader}>Tasks:</Text>
+          <DisplayTasks />
+        </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -175,8 +189,7 @@ function TaskScreen() {
       <View style={styles.buttonStyle}>
         <Button
           title="Submit"
-          onPress={() =>
-            {
+          onPress={() => {
               if(nameText) {
                 tasks.push(new Task(nameText, descText));
                 navigation.dispatch(
@@ -237,26 +250,34 @@ tasks.push(task1,task2,task3, task4);
 
 function RootStack() {
   return (
-    <NavigationIndependentTree>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-          />
-          <Stack.Screen
-            name="Tasks"
-            component={TaskScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </NavigationIndependentTree>
+    <PaperProvider theme={CombinedDefaultTheme}>
+      <NavigationIndependentTree>
+        <NavigationContainer theme={CombinedDefaultTheme}>
+          <Stack.Navigator initialRouteName="Home"
+            screenOptions={{
+              headerShown: false
+            }}
+          >
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+            />
+            <Stack.Screen
+              name="Tasks"
+              component={TaskScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </NavigationIndependentTree>
+    </PaperProvider>
   );
 };
 
 
-export default function App() {
+export default function Main() {
   return (
+
     <RootStack />
+
   );
 }
