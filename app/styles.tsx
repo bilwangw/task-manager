@@ -15,7 +15,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 32,
     textAlign: 'center',
-    margin: 25,
+    margin: 15,
   },
   subheader: {
     color: 'Black',
@@ -96,7 +96,6 @@ export default StyleSheet.create({
   helpButton: {
     padding: 1,
     alignItems: 'center',
-    top: 25,
-    right: 25,
+    top: 18,
   }
 });

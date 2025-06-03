@@ -46,14 +46,8 @@ task4.complete = true;
 tasks.push(task1,task2,task3, task4);
 // tasks.push(task1,task2,task3, task4, task5, task6, task7, task8, task9, task10, task11, task12, task13, task14, task15, task16, task17, task18);
 
-
-
 // Function for creating the list of tasks
 function DisplayTasks() {
-  const rows = [];
-  for (var i = 0; i < tasks.length; i++) {
-    rows.push(DisplayRow(tasks[i]));
-  }
   return (
     <DataTable>
       <DataTable.Header style={styles.tableHeader}>
@@ -62,10 +56,14 @@ function DisplayTasks() {
         <DataTable.Title style={{flex: 6}}>Description</DataTable.Title>
         <DataTable.Title style={{flex: 1}}></DataTable.Title>
       </DataTable.Header>
-      {rows}
+      {tasks.map((task) => {
+        return (
+          DisplayRow(task)
+        )})}
     </DataTable>
   )
 }
+
 
 // Function to display each individual task, handle deletion, and handle toggling completion
 function DisplayRow(task) {
