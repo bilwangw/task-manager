@@ -31,6 +31,7 @@ export default StyleSheet.create({
     bottom: 20,
     gap: 20,
     width: 375,
+    height: 50,
     paddingLeft: 15,
     backgroundColor: 'rgb(222,222,222)',
     borderRadius: 15

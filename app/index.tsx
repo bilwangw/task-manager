@@ -9,8 +9,9 @@ import {
   TextInput,
   Modal,
   useColorScheme,
+  Appearance,
 } from 'react-native';
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import Task from './task.tsx';
 import {NavigationContainer, NavigationIndependentTree, useNavigation, CommonActions, DefaultTheme, } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -308,6 +309,8 @@ function RootStack() {
 
 
 export default function Main() {
+  useEffect(() => Appearance.setColorScheme('light'),
+  [])
   return (
     <RootStack />
   );
