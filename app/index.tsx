@@ -1,6 +1,5 @@
 import {
   Alert,
-  Button,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,7 +16,7 @@ import {NavigationContainer, NavigationIndependentTree, useNavigation, CommonAct
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import styles from "./styles.tsx";
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { PaperProvider, adaptNavigationTheme, DataTable } from 'react-native-paper';
+import { PaperProvider, adaptNavigationTheme, DataTable, Button  } from 'react-native-paper';
 
 const Stack = createNativeStackNavigator();
 const tasks = [];
@@ -73,8 +72,13 @@ function DisplayRow(task) {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [taskState, setTaskState] = useState(task.complete ? " \u2713":" ---")
+  const descAlert = () =>
+  Alert.alert('Description', task.description, [
+    {text: 'OK', onPress: () => console.log('ok')},
+  ]);
+
   return (
-      <DataTable.Row key={task.id}>
+      <DataTable.Row key={task.id} styles={styles.rows}>
         <Modal
           animationType="slide"
           transparent={true}
@@ -88,7 +92,7 @@ function DisplayRow(task) {
               <Text>Are you sure you want to delete this task? This action cannot be undone</Text>
               <View style={styles.modalButtons}>
                 <Button
-                  title = "Delete"
+                  mode='outlined'
                   onPress={() => {
                       tasks.splice(tasks.indexOf(task), 1);
                       navigation.dispatch(
@@ -101,14 +105,18 @@ function DisplayRow(task) {
                       );
                     }
                   }
-                />
+                >
+                  Delete
+                </Button>
                 <Button
-                  title = "Cancel"
+                  mode='outlined'
                   onPress={() => {
                       setModalVisible(!modalVisible);
                     }
                   }
-                />
+                >
+                  Cancel
+                </Button>
               </View>
             </View>
           </Modal>
@@ -122,7 +130,13 @@ function DisplayRow(task) {
         {taskState}
         </DataTable.Cell>
         <DataTable.Cell style={{flex: 3}}>{task.name}</DataTable.Cell>
-        <DataTable.Cell style={{flex: 6}}>{task.description}</DataTable.Cell>
+        <DataTable.Cell
+          style={{flex: 6}}
+          onPress={() => {
+            descAlert()
+          }}
+        >{task.description}
+        </DataTable.Cell>
         <DataTable.Cell
           style={{flex: 1}}
           onPress={() => {
@@ -139,34 +153,50 @@ function DisplayRow(task) {
 // Default page, displaying tasks with a button to add more
 function HomeScreen() {
   const navigation = useNavigation();
+  const helpAlert = () =>
+    Alert.alert('How to Use Task Manager', 'To mark a task as complete, click on the "---". To Un-mark a task as complete, click it again!\nTo delete a task, press the red X.\nClick on the description text to expand and read the full description', [
+      {text: 'OK', onPress: () => console.log('ok')},
+  ]);
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.fixToText}>
           <Text style={styles.header}>Simple Task Manager</Text>
-          <Text style={styles.description}>To mark a task as complete, click on the "---". To Un-mark a task as complete, click it again!</Text>
-        </View>
-        <View style={styles.buttonStyle}>
           <Button
-            title="Add Task"
+            style={styles.helpButton}
+            icon="help"
+            mode="compact"
             onPress={() => {
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 1,
-                  routes: [
-                    { name: 'Tasks' },
-                  ],
-                })
-              );}
-            }
-          />
+              helpAlert()
+            }}
+          >
+          </Button>
         </View>
         <ScrollView style={styles.scrollView}>
           <Text style={styles.subheader}>Tasks:</Text>
           <DisplayTasks />
         </ScrollView>
       </SafeAreaView>
+      <View style={styles.addTask}>
+        <Button
+          icon="plus"
+          mode="contained"
+          accessibilityLabel="Add Task"
+          onPress={() => {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [
+                  { name: 'Tasks' },
+                ],
+              })
+            );}
+          }
+        >
+          Add Task
+        </Button>
+      </View>
     </SafeAreaProvider>
   );
 }
@@ -191,6 +221,7 @@ function TaskScreen() {
         <Text style={styles.subheader}>Task Name</Text>
         <TextInput
           style={styles.input}
+          maxLength={40}
           onChangeText={nameOnChangeText}
           value={nameText}
           placeholder="Task Name"
@@ -201,7 +232,7 @@ function TaskScreen() {
         <TextInput
           multiline
           numberOfLines={4}
-          maxLength={40}
+          maxLength={100}
           style={styles.input}
           onChangeText={descOnChangeText}
           value={descText}
@@ -210,7 +241,8 @@ function TaskScreen() {
       </View>
       <View style={styles.buttonStyle}>
         <Button
-          title="Submit"
+          mode="contained"
+          accessibilityLabel="Submit task"
           onPress={() => {
               if(nameText) {
                 tasks.push(new Task(nameText, descText));
@@ -221,11 +253,15 @@ function TaskScreen() {
               }
             }
           }
-        />
+        >
+          Submit
+        </Button>
       </View>
       <View style={styles.buttonStyle}>
         <Button
-          title="Home"
+          icon="home"
+          style={{fontSize: 25}}
+          accessibilityLabel="Go back to home screen"
           onPress={() => {
             navigation.dispatch(
               CommonActions.reset({
@@ -236,7 +272,8 @@ function TaskScreen() {
               })
             );}
           }
-        />
+        >Home
+        </Button>
       </View>
     </View>
   );
