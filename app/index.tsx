@@ -48,6 +48,8 @@ tasks.push(task1,task2,task3, task4);
 
 // Function for creating the list of tasks
 function DisplayTasks() {
+  const [taskList, setTasks] = useState(tasks);
+
   return (
     <DataTable>
       <DataTable.Header style={styles.tableHeader}>
@@ -56,7 +58,7 @@ function DisplayTasks() {
         <DataTable.Title style={{flex: 6}}>Description</DataTable.Title>
         <DataTable.Title style={{flex: 1}}></DataTable.Title>
       </DataTable.Header>
-      {tasks.map((task) => {
+      {taskList.map((task) => {
         return (
           DisplayRow(task)
         )})}
@@ -69,7 +71,7 @@ function DisplayTasks() {
 function DisplayRow(task) {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [taskState, setTaskState] = useState(task.complete ? " \u2713":" ---")
+  const [taskState, setTaskState] = useState(task.complete ? "\u2713":"---")
   const descAlert = () =>
   Alert.alert('Description', task.description, [
     {text: 'OK', onPress: () => console.log('ok')},
@@ -119,10 +121,10 @@ function DisplayRow(task) {
             </View>
           </Modal>
         <DataTable.Cell
-          style={{flex: 1, textAlign: 'right',}}
+          textStyle={{flex: 1, textAlign: 'center', fontSize: 15}}
           onPress={() => {
             task.complete=!task.complete;
-            setTaskState(task.complete ? " \u2713":" ---");
+            setTaskState(task.complete ? "\u2713":"---");
           }}
         >
         {taskState}
@@ -136,7 +138,7 @@ function DisplayRow(task) {
         >{task.description}
         </DataTable.Cell>
         <DataTable.Cell
-          style={{flex: 1}}
+          textStyle={{flex: 1, textAlign: 'center', fontSize: 15}}
           onPress={() => {
             setModalVisible(true)
           }
